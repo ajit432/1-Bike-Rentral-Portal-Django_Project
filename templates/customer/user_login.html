@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}
+Customer Login
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* Login page container */
+    .login-container {
+        min-height: 100vh;
+        background: var(--bg-primary);
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Login card */
+    .login-card {
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        max-width: 450px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-400), var(--accent-color));
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .login-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .login-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .form-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .login-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        border: none;
+        color: var(--white);
+        padding: 18px 30px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .login-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .login-btn:hover::before {
+        left: 100%;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .forgot-password a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+        color: var(--secondary-400);
+        text-decoration: underline;
+    }
+
+    .register-link {
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .register-link a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .register-link a:hover {
+        color: var(--secondary-400);
+        text-decoration: underline;
+    }
+
+    /* Enhanced Mobile responsiveness */
+    @media (max-width: 575px) {
+        .login-container {
+            padding: 15px 10px;
+        }
+        
+        .login-card {
+            padding: 25px 20px;
+            margin: 10px;
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+        }
+        
+        .login-subtitle {
+            font-size: 1rem;
+        }
+        
+        .form-input {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .login-btn {
+            padding: 15px 25px;
+            font-size: 1rem;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+        .login-container {
+            padding: 20px 15px;
+        }
+        
+        .login-card {
+            padding: 35px 30px;
+        }
+        
+        .login-title {
+            font-size: 2.2rem;
+        }
+        
+        .form-input {
+            padding: 14px 18px;
+        }
+        
+        .login-btn {
+            padding: 16px 28px;
+            font-size: 1.05rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .login-container {
+            padding: 25px 20px;
+        }
+        
+        .login-card {
+            padding: 40px 35px;
+        }
+        
+        .login-title {
+            font-size: 2.3rem;
+        }
+        
+        .form-input {
+            padding: 15px 20px;
+        }
+        
+        .login-btn {
+            padding: 17px 30px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .login-container {
+            padding: 30px 20px;
+        }
+        
+        .login-card {
+            padding: 50px;
+        }
+        
+        .login-title {
+            font-size: 2.5rem;
+        }
+        
+        .form-input {
+            padding: 15px 20px;
+        }
+        
+        .login-btn {
+            padding: 18px 30px;
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <h1 class="login-title">Customer Login</h1>
+        <p class="login-subtitle">Access your account to book bikes</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="un" class="form-input" placeholder="Enter your username" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="pw" class="form-input" placeholder="Enter your password" required>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="{% url 'forgetpw' %}">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="login-btn">Login as Customer</button>
+        </form>
+        
+        <div class="register-link">
+            <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,192 @@
+{% extends "index.html" %}
+
+{% block title %}
+New Password
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* New password page container */
+    .new-password-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* New password card */
+    .new-password-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 450px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .new-password-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe, #00f2fe);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .new-password-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .new-password-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+    }
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #f093fb;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 20px rgba(240, 147, 251, 0.3);
+    }
+
+    .change-password-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 18px 30px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .change-password-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .change-password-btn:hover::before {
+        left: 100%;
+    }
+
+    .change-password-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(240, 147, 251, 0.4);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .new-password-container {
+            padding: 20px 15px;
+        }
+        
+        .new-password-card {
+            padding: 30px 25px;
+        }
+        
+        .new-password-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .new-password-card {
+            padding: 25px 20px;
+        }
+        
+        .new-password-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="new-password-container">
+    <div class="new-password-card">
+        <h1 class="new-password-title">New Password</h1>
+        <p class="new-password-subtitle">Set your new password</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="pw">New Password</label>
+                <input type="password" name="pw" id="pw" class="form-input" placeholder="Enter new password" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="cpw">Confirm New Password</label>
+                <input type="password" name="cpw" id="cpw" class="form-input" placeholder="Confirm new password" required>
+            </div>
+            
+            <button type="submit" class="change-password-btn">Change Password</button>
+        </form>
+    </div>
+</div>
+
+{% endblock body %}

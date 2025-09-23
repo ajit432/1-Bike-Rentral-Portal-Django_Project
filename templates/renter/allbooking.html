@@ -1,0 +1,367 @@
+{% extends "index.html" %}
+
+{% block title %}
+ALL_bookings
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* Bookings page container */
+    .bookings-container {
+        min-height: 100vh;
+        background: #000000;
+        padding: 40px 20px;
+    }
+
+    .bookings-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .bookings-title {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+    }
+
+    .bookings-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+    }
+
+    /* Table container with responsive wrapper */
+    .table-responsive-wrapper {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow-x: auto;
+        margin: 0 auto;
+        max-width: 1400px;
+    }
+
+    /* Table styling */
+    .bookings-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: transparent;
+        color: white;
+        min-width: 1200px;
+    }
+
+    .bookings-table thead th {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-weight: 600;
+        padding: 15px 12px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+    }
+
+    .bookings-table tbody td {
+        padding: 15px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    .bookings-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .bookings-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: scale(1.01);
+    }
+
+    .bike-photo {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-approve {
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+    }
+
+    .btn-approve:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+    }
+
+    .btn-reject:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(248, 113, 113, 0.4);
+    }
+
+    /* Status badges */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: white;
+    }
+
+    .status-approved {
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        color: white;
+    }
+
+    .status-rejected {
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        color: white;
+    }
+
+    /* No bookings message */
+    .no-bookings {
+        text-align: center;
+        padding: 80px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .no-bookings-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+    }
+
+    .no-bookings-text {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 1200px) {
+        .bookings-table {
+            min-width: 800px;
+        }
+        
+        .bookings-table thead th,
+        .bookings-table tbody td {
+            padding: 12px 8px;
+            font-size: 0.8rem;
+        }
+        
+        .bike-photo {
+            width: 60px;
+            height: 45px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .bookings-container {
+            padding: 20px 15px;
+        }
+        
+        .bookings-title {
+            font-size: 2.5rem;
+        }
+        
+        .bookings-subtitle {
+            font-size: 1rem;
+        }
+        
+        .table-responsive-wrapper {
+            padding: 20px;
+        }
+        
+        .bookings-table {
+            min-width: 900px;
+        }
+        
+        .bookings-table thead th,
+        .bookings-table tbody td {
+            padding: 10px 6px;
+            font-size: 0.75rem;
+        }
+        
+        .bike-photo {
+            width: 50px;
+            height: 35px;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .btn-approve,
+        .btn-reject {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+        
+        .no-bookings {
+            padding: 60px 20px;
+        }
+        
+        .no-bookings-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .bookings-title {
+            font-size: 2rem;
+        }
+        
+        .bookings-table {
+            min-width: 800px;
+        }
+        
+        .bookings-table thead th,
+        .bookings-table tbody td {
+            padding: 8px 4px;
+            font-size: 0.7rem;
+        }
+        
+        .bike-photo {
+            width: 40px;
+            height: 30px;
+        }
+        
+        .no-bookings-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="bookings-container">
+    <div class="bookings-header">
+        <h1 class="bookings-title">All Bookings</h1>
+        <p class="bookings-subtitle">Manage your bike rental bookings</p>
+    </div>
+
+    {% if allbookings %}
+    <div class="table-responsive-wrapper">
+        <table class="bookings-table">
+            <thead>
+                <tr>
+                    <th scope="col">SL No</th>
+                    <th scope="col">Booking ID</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Bike Name</th>
+                    <th scope="col">Bike Photo</th>
+                    <th scope="col">Pickup Date</th>
+                    <th scope="col">Pickup Time</th>
+                    <th scope="col">Drop Date</th>
+                    <th scope="col">Drop Time</th>
+                    <th scope="col">Price/Day</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in allbookings %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{book.booking_id}}</td>
+                    <td>{{book.username.first_name}} {{book.username.last_name}}</td>
+                    <td>{{book.bike_name.bike_name}}</td>
+                    <td><img src="{{book.bike_name.photo.url}}" alt="Bike Photo" class="bike-photo"></td>
+                    <td>{{book.pickup_date}}</td>
+                    <td>{{book.pickup_time}}</td>
+                    <td>{{book.drop_date}}</td>
+                    <td>{{book.drop_time}}</td>
+                    <td>₹{{book.bike_name.price_per_day}}</td>
+                    <td>₹{{ book.total_price }}</td>
+                    <td>
+                        <span class="status-badge status-{{book.status|lower}}">{{book.status}}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if book.status == 'Pending' %}
+                            <form method="post" action="{% url 'approve' book.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-approve">Approve</button>
+                            </form>
+                            <form method="post" action="{% url 'reject' book.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-reject">Reject</button>
+                            </form>
+                            {% elif book.status == 'Approve' %}
+                            <form method="post" action="{% url 'reject' book.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-reject">Reject</button>
+                            </form>
+                            {% elif book.status == 'Reject' %}
+                            <form method="post" action="{% url 'approve' book.pk %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-approve">Approve</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-bookings">
+        <h1 class="no-bookings-title">No Bookings Yet</h1>
+        <p class="no-bookings-text">You haven't received any bookings yet. Add more bikes to attract customers!</p>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock body %}

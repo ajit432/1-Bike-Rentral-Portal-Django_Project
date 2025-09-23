@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}
+      {% endblock title %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for Color System - 60-30-10 Rule */
+        :root {
+            /* Primary Colors (60%) - Royal Blue */
+            --primary-900: #0f172a;
+            --primary-800: #1e293b;
+            --primary-700: #334155;
+            --primary-600: #475569;
+            --primary-500: #64748b;
+            --primary-400: #94a3b8;
+            --primary-300: #cbd5e1;
+            --primary-200: #e2e8f0;
+            --primary-100: #f1f5f9;
+            --primary-50: #f8fafc;
+            
+            /* Secondary Colors (30%) - Royal Blue Accent */
+            --secondary-900: #1e3a8a;
+            --secondary-800: #1e40af;
+            --secondary-700: #1d4ed8;
+            --secondary-600: #2563eb;
+            --secondary-500: #3b82f6;
+            --secondary-400: #60a5fa;
+            --secondary-300: #93c5fd;
+            --secondary-200: #bfdbfe;
+            --secondary-100: #dbeafe;
+            --secondary-50: #eff6ff;
+            
+            /* Accent Colors (10%) - White/Gold */
+            --accent-900: #451a03;
+            --accent-800: #78350f;
+            --accent-700: #a16207;
+            --accent-600: #ca8a04;
+            --accent-500: #eab308;
+            --accent-400: #facc15;
+            --accent-300: #fde047;
+            --accent-200: #fef08a;
+            --accent-100: #fef3c7;
+            --accent-50: #fffbeb;
+            
+            /* Neutral Colors */
+            --white: #ffffff;
+            --black: #000000;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Theme Variables */
+            --bg-primary: var(--primary-900);
+            --bg-secondary: var(--primary-800);
+            --bg-tertiary: var(--primary-700);
+            --text-primary: var(--white);
+            --text-secondary: var(--primary-200);
+            --text-muted: var(--primary-400);
+            --border-color: var(--primary-600);
+            --accent-color: var(--secondary-500);
+            --accent-hover: var(--secondary-400);
+            --success-color: #10b981;
+            --warning-color: var(--accent-500);
+            --error-color: #ef4444;
+        }
+
+        /* Light Theme */
+        [data-theme="light"] {
+            --bg-primary: var(--white);
+            --bg-secondary: var(--gray-50);
+            --bg-tertiary: var(--gray-100);
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-700);
+            --text-muted: var(--gray-500);
+            --border-color: var(--gray-300);
+            --accent-color: var(--secondary-600);
+            --accent-hover: var(--secondary-700);
+        }
+
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Responsive Typography */
+        @media (max-width: 575px) {
+            body {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            h4 { font-size: 1.1rem; }
+            h5 { font-size: 1rem; }
+            h6 { font-size: 0.9rem; }
+        }
+
+        @media (min-width: 576px) and (max-width: 767px) {
+            body {
+                font-size: 15px;
+                line-height: 1.55;
+            }
+            
+            h1 { font-size: 1.875rem; }
+            h2 { font-size: 1.625rem; }
+            h3 { font-size: 1.375rem; }
+            h4 { font-size: 1.125rem; }
+            h5 { font-size: 1.05rem; }
+            h6 { font-size: 0.95rem; }
+        }
+
+        @media (min-width: 768px) and (max-width: 991px) {
+            body {
+                font-size: 15.5px;
+                line-height: 1.58;
+            }
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            h5 { font-size: 1.1rem; }
+            h6 { font-size: 1rem; }
+        }
+
+        @media (min-width: 992px) and (max-width: 1199px) {
+            body {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            
+            h1 { font-size: 2.25rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.75rem; }
+            h4 { font-size: 1.5rem; }
+            h5 { font-size: 1.25rem; }
+            h6 { font-size: 1.1rem; }
+        }
+
+        @media (min-width: 1200px) {
+            body {
+                font-size: 16.5px;
+                line-height: 1.65;
+            }
+            
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2.25rem; }
+            h3 { font-size: 2rem; }
+            h4 { font-size: 1.75rem; }
+            h5 { font-size: 1.5rem; }
+            h6 { font-size: 1.25rem; }
+        }
+
+        /* Enhanced navbar styling */
+        .navbar {
+            background: var(--bg-secondary) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-left: -10px;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 15px !important;
+            margin: 0 3px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+            color: var(--text-primary) !important;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+            color: var(--white) !important;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced Search form styling */
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .search-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-primary);
+            padding: 12px 20px;
+            width: 300px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            background: var(--bg-secondary);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            outline: none;
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+            border: none;
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, var(--secondary-400) 0%, var(--accent-color) 100%);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        
+        /* Large Desktop (1200px and up) */
+        @media (min-width: 1200px) {
+            .container-fluid {
+                max-width: 1400px;
+            }
+            
+            .navbar-brand {
+                font-size: 2.2rem;
+            }
+            
+            .search-input {
+                width: 400px;
+            }
+            
+            .nav-link {
+                padding: 8px 15px !important;
+                margin: 0 3px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Desktop (992px to 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .navbar-brand {
+                font-size: 2rem;
+            }
+            
+            .search-input {
+                width: 300px;
+            }
+            
+            .nav-link {
+                padding: 8px 15px !important;
+                margin: 0 3px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Tablet (768px to 991px) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .search-input {
+                width: 250px;
+            }
+            
+            .nav-link {
+                padding: 8px 15px !important;
+                margin: 0 3px;
+                font-size: 0.9rem;
+            }
+            
+            .navbar-nav {
+                gap: 0.5rem;
+            }
+            
+            .search-form {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            .theme-toggle {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* Mobile Large (576px to 767px) */
+        @media (min-width: 576px) and (max-width: 767px) {
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+            
+            .search-form {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+                gap: 0.75rem;
+            }
+            
+            .search-input {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .search-btn {
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .nav-link {
+                padding: 8px 15px !important;
+                margin: 2px 0;
+                text-align: center;
+                border-radius: 15px;
+                font-size: 0.85rem;
+            }
+            
+            .navbar-nav {
+                text-align: center;
+                margin: 1rem 0;
+            }
+            
+            .theme-toggle {
+                margin: 1rem auto 0;
+                display: block;
+            }
+            
+            .navbar-toggler {
+                border: none;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            .navbar-toggler:focus {
+                box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+            }
+        }
+        
+        /* Mobile Small (up to 575px) */
+        @media (max-width: 575px) {
+            .navbar {
+                padding: 8px 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.4rem;
+            }
+            
+            .container-fluid {
+                padding: 0 15px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .search-input {
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .search-btn {
+                width: 100%;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .nav-link {
+                padding: 8px 15px !important;
+                margin: 1px 0;
+                font-size: 0.85rem;
+                text-align: center;
+                border-radius: 10px;
+            }
+            
+            .navbar-nav {
+                text-align: center;
+                margin: 1rem 0;
+                width: 100%;
+            }
+            
+            .navbar-nav .nav-item {
+                width: 100%;
+                margin: 0;
+            }
+            
+            .theme-toggle {
+                margin: 1rem auto 0;
+                display: block;
+                width: fit-content;
+                padding: 6px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .navbar-toggler {
+                border: none;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .navbar-toggler:focus {
+                box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+            }
+            
+            .navbar-collapse {
+                background: var(--bg-secondary);
+                border-radius: 15px;
+                margin-top: 1rem;
+                padding: 1rem;
+                border: 1px solid var(--border-color);
+            }
+        }
+
+        /* Enhanced Content area styling */
+        .main-content {
+            min-height: calc(100vh - 80px);
+            padding: 0;
+        }
+
+        /* Responsive utility classes */
+        .container-fluid {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        @media (min-width: 576px) {
+            .container-fluid {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container-fluid {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container-fluid {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container-fluid {
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+        }
+
+        /* Responsive spacing utilities */
+        .responsive-padding {
+            padding: 1rem;
+        }
+
+        .responsive-margin {
+            margin: 1rem;
+        }
+
+        @media (min-width: 576px) {
+            .responsive-padding {
+                padding: 1.5rem;
+            }
+            .responsive-margin {
+                margin: 1.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .responsive-padding {
+                padding: 2rem;
+            }
+            .responsive-margin {
+                margin: 2rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .responsive-padding {
+                padding: 2.5rem;
+            }
+            .responsive-margin {
+                margin: 2.5rem;
+            }
+        }
+
+        /* Touch-friendly interactive elements */
+        @media (max-width: 768px) {
+            .btn, .nav-link, .search-btn, .theme-toggle {
+                min-height: 44px;
+                min-width: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .btn-sm, .nav-link {
+                padding: 8px 16px !important;
+            }
+        }
+
+        /* Improved focus states for accessibility */
+        .nav-link:focus,
+        .search-input:focus,
+        .search-btn:focus,
+        .theme-toggle:focus,
+        .btn:focus,
+        .navbar-toggler:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Prevent horizontal scroll */
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Better touch targets */
+        @media (max-width: 768px) {
+            a, button, input, select, textarea {
+                min-height: 44px;
+            }
+            
+            .navbar-toggler {
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+
+        /* Enhanced Floating action button for mobile */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .fab:hover {
+            transform: scale(1.1) translateY(-2px);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5);
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive FAB sizing */
+        @media (max-width: 575px) {
+            .fab {
+                width: 55px;
+                height: 55px;
+                bottom: 25px;
+                right: 25px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767px) {
+            .fab {
+                width: 58px;
+                height: 58px;
+                bottom: 28px;
+                right: 28px;
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .fab {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-motorcycle me-2"></i>BikeWala
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'display_profile' %}">
+                            <i class="fas fa-user me-1"></i>My Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_bookings' %}">
+                            <i class="fas fa-calendar-check me-1"></i>My Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'changepw' %}">
+                            <i class="fas fa-key me-1"></i>Change Password
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <form class="search-form" role="search" action="{% url 'search' %}" method="post" id="searchForm">
+                    {% csrf_token %}
+                    <input class="search-input" type="search" placeholder="Search bikes..." list="bikelist" aria-label="Search" name="srch" id="searchInput" required>
+                    <datalist id="bikelist">
+                        {% for bike in bikes %}
+                        <option value="{{bike.bike_name}}">{{bike.bike_name}}</option>
+                        {% endfor %}
+                    </datalist>
+                    <button class="search-btn" type="submit" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                
+                <!-- Theme Toggle Button -->
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        {% block body %}
+        {% endblock body %}
+    </div>
+
+    <!-- Floating Action Button for Mobile -->
+    <a href="#" class="fab" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+        <i class="fas fa-bars"></i>
+    </a>
+
+    <!-- Mobile Menu Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobileMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a href="{% url 'home' %}" class="text-decoration-none">
+                        <i class="fas fa-home me-2"></i>Home
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="list-group-item">
+                    <a href="{% url 'display_profile' %}" class="text-decoration-none">
+                        <i class="fas fa-user me-2"></i>My Profile
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'my_bookings' %}" class="text-decoration-none">
+                        <i class="fas fa-calendar-check me-2"></i>My Bookings
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'changepw' %}" class="text-decoration-none">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </a>
+                </li>
+                {% else %}
+                <li class="list-group-item">
+                    <a href="{% url 'register' %}" class="text-decoration-none">
+                        <i class="fas fa-user-plus me-2"></i>Register
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'user_login' %}" class="text-decoration-none">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content logout-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-sign-out-alt me-2"></i>Confirm Logout
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="logout-content">
+                        <div class="logout-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <p class="logout-message">
+                            Are you sure you want to logout from your account?
+                        </p>
+                        <p class="logout-submessage">
+                            You will need to login again to access your profile and bookings.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <a href="{% url 'user_logout' %}" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i>Yes, Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Logout Modal Styling */
+        .logout-modal {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logout-modal .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .logout-modal .modal-title {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .logout-modal .btn-close {
+            filter: invert(1);
+        }
+
+        .logout-modal .modal-body {
+            padding: 30px;
+        }
+
+        .logout-content {
+            text-align: center;
+        }
+
+        .logout-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .logout-message {
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .logout-submessage {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        .logout-modal .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 30px;
+            gap: 10px;
+        }
+
+        .logout-modal .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .logout-modal .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-modal .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .logout-modal .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .logout-modal .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        }
+
+        .logout-modal .btn-danger:active {
+            transform: translateY(0);
+        }
+
+        /* Modal backdrop */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Enhanced Mobile responsiveness for modals */
+        @media (max-width: 575px) {
+            .logout-modal .modal-body {
+                padding: 20px 15px;
+            }
+            
+            .logout-icon {
+                font-size: 3rem;
+                margin-bottom: 15px;
+            }
+            
+            .logout-message {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+            
+            .logout-submessage {
+                font-size: 0.9rem;
+            }
+            
+            .logout-modal .modal-footer {
+                padding: 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logout-modal .btn {
+                width: 100%;
+                margin: 0;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .logout-modal .modal-header {
+                padding: 15px;
+            }
+            
+            .logout-modal .modal-title {
+                font-size: 1.2rem;
+            }
+            
+            .modal-dialog {
+                margin: 10px;
+                max-width: calc(100% - 20px);
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767px) {
+            .logout-modal .modal-body {
+                padding: 25px 20px;
+            }
+            
+            .logout-icon {
+                font-size: 3.5rem;
+                margin-bottom: 18px;
+            }
+            
+            .logout-message {
+                font-size: 1.15rem;
+                margin-bottom: 10px;
+            }
+            
+            .logout-modal .modal-footer {
+                padding: 20px;
+                gap: 12px;
+            }
+            
+            .logout-modal .btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+            
+            .modal-dialog {
+                margin: 20px;
+                max-width: calc(100% - 40px);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .modal-dialog {
+                max-width: 500px;
+            }
+        }
+
+        /* Offcanvas responsiveness */
+        @media (max-width: 575px) {
+            .offcanvas {
+                width: 85% !important;
+            }
+            
+            .offcanvas-header {
+                padding: 15px;
+            }
+            
+            .offcanvas-body {
+                padding: 15px;
+            }
+            
+            .offcanvas-title {
+                font-size: 1.2rem;
+            }
+            
+            .list-group-item {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .list-group-item a {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767px) {
+            .offcanvas {
+                width: 70% !important;
+            }
+            
+            .offcanvas-header {
+                padding: 20px;
+            }
+            
+            .offcanvas-body {
+                padding: 20px;
+            }
+            
+            .list-group-item {
+                padding: 15px 20px;
+            }
+        }
+
+        /* Search validation styling */
+        .search-input.error {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 20px rgba(220, 53, 69, 0.3) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .search-input.error::placeholder {
+            color: #ff6b6b !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .search-error-message {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .search-form {
+            position: relative;
+        }
+    </style>
+
+    <script>
+        // Search form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            // Create error message element
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'search-error-message';
+            errorMessage.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Please enter a bike model name to search';
+            searchForm.appendChild(errorMessage);
+            
+            // Form submission validation
+            searchForm.addEventListener('submit', function(e) {
+                const searchValue = searchInput.value.trim();
+                
+                if (searchValue === '') {
+                    e.preventDefault(); // Prevent form submission
+                    
+                    // Add error styling
+                    searchInput.classList.add('error');
+                    errorMessage.style.display = 'block';
+                    
+                    // Focus on input
+                    searchInput.focus();
+                    
+                    // Remove error styling after 3 seconds
+                    setTimeout(function() {
+                        searchInput.classList.remove('error');
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                    
+                    return false;
+                } else {
+                    // Remove any existing error styling
+                    searchInput.classList.remove('error');
+                    errorMessage.style.display = 'none';
+                }
+            });
+            
+            // Clear error when user starts typing
+            searchInput.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    this.classList.remove('error');
+                    errorMessage.style.display = 'none';
+                }
+            });
+            
+            // Clear error when input gets focus
+            searchInput.addEventListener('focus', function() {
+                this.classList.remove('error');
+                errorMessage.style.display = 'none';
+            });
+            
+            // Add click validation for search button
+            searchBtn.addEventListener('click', function(e) {
+                const searchValue = searchInput.value.trim();
+                
+                if (searchValue === '') {
+                    e.preventDefault();
+                    
+                    // Add error styling
+                    searchInput.classList.add('error');
+                    errorMessage.style.display = 'block';
+                    
+                    // Focus on input
+                    searchInput.focus();
+                    
+                    // Remove error styling after 3 seconds
+                    setTimeout(function() {
+                        searchInput.classList.remove('error');
+                        errorMessage.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        });
+
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to 'dark'
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', currentTheme);
+        
+        // Update icon based on current theme
+        if (currentTheme === 'light') {
+            themeIcon.className = 'fas fa-sun';
+        } else {
+            themeIcon.className = 'fas fa-moon';
+        }
+
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            if (newTheme === 'light') {
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        });
+    </script>
+</body>
+</html>

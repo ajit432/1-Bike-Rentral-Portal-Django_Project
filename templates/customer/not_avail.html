@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}
+Bike Not Available - BikeWala
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100">
+        <div class="col-12">
+            <div class="text-center">
+                <!-- Unavailable Icon -->
+                <div class="mb-4">
+                    <i class="fas fa-times-circle text-warning" style="font-size: 4rem;"></i>
+                </div>
+                
+                <!-- Main Heading -->
+                <h1 class="display-4 fw-bold text-primary mb-4">
+                    Bike Not Available
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="lead text-muted mb-5">
+                    Sorry, this bike is currently not available for booking. Please check back later or explore other options.
+                </p>
+                
+                <!-- Action Buttons -->
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
+                    <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-4 py-3 rounded-pill shadow-sm">
+                        <i class="fas fa-home me-2"></i>
+                        Go to Home Page
+                    </a>
+                    <a href="{% url 'display' %}" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
+                        <i class="fas fa-motorcycle me-2"></i>
+                        Browse All Bikes
+                    </a>
+                </div>
+                
+                <!-- Additional Info Card -->
+                <div class="card mt-5 mx-auto" style="max-width: 500px; background: var(--bg-secondary); border: 1px solid var(--border-color);">
+                    <div class="card-body text-start">
+                        <h5 class="card-title text-primary mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Why is this bike unavailable?
+                        </h5>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="fas fa-calendar-times text-primary me-2"></i>
+                                Already booked for the selected dates
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-tools text-primary me-2"></i>
+                                Currently under maintenance
+                            </li>
+                            <li class="mb-0">
+                                <i class="fas fa-exclamation-triangle text-primary me-2"></i>
+                                Temporarily out of service
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles for Responsive Design -->
+<style>
+    /* Mobile First Responsive Design */
+    @media (max-width: 575px) {
+        .display-4 {
+            font-size: 2rem !important;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem !important;
+            font-size: 1rem !important;
+        }
+        
+        .card {
+            margin: 1rem !important;
+        }
+        
+        .fas {
+            font-size: 3rem !important;
+        }
+    }
+    
+    @media (min-width: 576px) and (max-width: 767px) {
+        .display-4 {
+            font-size: 2.5rem !important;
+        }
+        
+        .fas {
+            font-size: 3.5rem !important;
+        }
+    }
+    
+    @media (min-width: 768px) and (max-width: 991px) {
+        .display-4 {
+            font-size: 3rem !important;
+        }
+        
+        .fas {
+            font-size: 4rem !important;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .display-4 {
+            font-size: 3.5rem !important;
+        }
+        
+        .fas {
+            font-size: 4.5rem !important;
+        }
+    }
+    
+    /* Enhanced Button Hover Effects */
+    .btn-primary {
+        background: linear-gradient(135deg, var(--secondary-600) 0%, var(--secondary-500) 100%);
+        border: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-outline-primary {
+        border: 2px solid var(--secondary-600);
+        color: var(--secondary-600);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-primary:hover {
+        background: var(--secondary-600);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Card Animation */
+    .card {
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Warning Icon Animation */
+    .fas.fa-times-circle {
+        animation: warningPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes warningPulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+    
+    /* Responsive Text */
+    .lead {
+        font-size: 1.1rem;
+    }
+    
+    @media (max-width: 575px) {
+        .lead {
+            font-size: 1rem;
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .lead {
+            font-size: 1.25rem;
+        }
+    }
+</style>
+{% endblock body %}

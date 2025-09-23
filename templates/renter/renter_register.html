@@ -1,0 +1,267 @@
+{% extends "index.html" %}
+
+{% block title %}
+Renter Registration
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* Registration page container */
+    .register-container {
+        min-height: 100vh;
+        background: #000000;
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Registration card */
+    .register-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe, #00f2fe);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .register-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #f093fb;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 20px rgba(240, 147, 251, 0.3);
+    }
+
+    .form-input[type="file"] {
+        padding: 12px 20px;
+        cursor: pointer;
+    }
+
+    .form-input[type="file"]::-webkit-file-upload-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        margin-right: 10px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .register-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 18px 30px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .register-btn:hover::before {
+        left: 100%;
+    }
+
+    .register-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(240, 147, 251, 0.4);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 30px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .login-link a {
+        color: #f093fb;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: #f5576c;
+        text-decoration: underline;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .register-container {
+            padding: 20px 15px;
+        }
+        
+        .register-card {
+            padding: 30px 25px;
+        }
+        
+        .register-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .register-card {
+            padding: 25px 20px;
+        }
+        
+        .register-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <h1 class="register-title">Join as Renter</h1>
+        <p class="register-subtitle">Start renting out your bikes and earn money</p>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">First Name</label>
+                {{EUFO.first_name}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                {{EUFO.last_name}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                {{EUFO.email}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                {{EUFO.username}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                {{EUFO.password}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                {{ECFO.pno}}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Profile Picture</label>
+                {{ECFO.profile_pic}}
+            </div>
+            
+            <button type="submit" class="register-btn">Register as Renter</button>
+        </form>
+        
+        <div class="login-link">
+            <p>Already have an account? <a href="{% url 'renter_login' %}">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add form input styling
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            // Don't style the CSRF token input
+            if (input.name !== 'csrfmiddlewaretoken') {
+                input.classList.add('form-input');
+            }
+        });
+    });
+</script>
+
+{% endblock body %}

@@ -1,0 +1,209 @@
+{% extends "index.html" %}
+
+{% block title %}
+Forgot Password
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* Forgot password page container */
+    .forgot-password-container {
+        min-height: 100vh;
+        background: #000000;
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Forgot password card */
+    .forgot-password-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 450px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .forgot-password-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe, #00f2fe);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .forgot-password-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .forgot-password-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+    }
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #f093fb;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 20px rgba(240, 147, 251, 0.3);
+    }
+
+    .send-otp-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 18px 30px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .send-otp-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .send-otp-btn:hover::before {
+        left: 100%;
+    }
+
+    .send-otp-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(240, 147, 251, 0.4);
+    }
+
+    .back-to-login {
+        text-align: center;
+        margin-top: 30px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .back-to-login a {
+        color: #f093fb;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .back-to-login a:hover {
+        color: #f5576c;
+        text-decoration: underline;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .forgot-password-container {
+            padding: 20px 15px;
+        }
+        
+        .forgot-password-card {
+            padding: 30px 25px;
+        }
+        
+        .forgot-password-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .forgot-password-card {
+            padding: 25px 20px;
+        }
+        
+        .forgot-password-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="forgot-password-container">
+    <div class="forgot-password-card">
+        <h1 class="forgot-password-title">Forgot Password</h1>
+        <p class="forgot-password-subtitle">Enter your username to receive OTP</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label" for="un">Username</label>
+                <input type="text" name="un" id="un" class="form-input" placeholder="Enter your username" required>
+            </div>
+            
+            <button type="submit" class="send-otp-btn">Send OTP</button>
+        </form>
+        
+        <div class="back-to-login">
+            <p>Remember your password? <a href="{% url 'renter_login' %}">Back to Login</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

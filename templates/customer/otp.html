@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+
+{% block title %}
+OTP Verification - BikeWala
+{% endblock title %}
+
+{% block body %}
+<style>
+    .otp-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--bg-primary);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .otp-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(59,130,246,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .otp-card {
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        padding: 50px;
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+    
+    .otp-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-400), var(--accent-color));
+        background-size: 200% 100%;
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .otp-icon {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .otp-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .otp-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    
+    .otp-form {
+        margin-top: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .form-label {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        text-align: left;
+    }
+    
+    .otp-input {
+        width: 100%;
+        padding: 20px;
+        background: var(--bg-tertiary);
+        border: 2px solid var(--border-color);
+        border-radius: 15px;
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+        letter-spacing: 0.5rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .otp-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        background: var(--bg-primary);
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .otp-input::placeholder {
+        color: var(--text-muted);
+        letter-spacing: normal;
+        font-size: 1rem;
+    }
+    
+    .validate-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        color: var(--white);
+        padding: 18px 30px;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .validate-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .validate-btn:hover::before {
+        left: 100%;
+    }
+    
+    .validate-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, var(--secondary-400) 0%, var(--accent-color) 100%);
+    }
+    
+    .validate-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .resend-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .resend-text {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+    
+    .resend-btn {
+        background: transparent;
+        color: var(--accent-color);
+        border: 2px solid var(--accent-color);
+        padding: 12px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .resend-btn:hover {
+        background: var(--accent-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+    
+    .back-link {
+        margin-top: 20px;
+    }
+    
+    .back-link a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .back-link a:hover {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    .otp-timer {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .timer-text {
+        color: var(--accent-color);
+        font-size: 1.1rem;
+    }
+    
+    .error-message {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #ff6b6b;
+        font-weight: 600;
+    }
+    
+    .success-message {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #10b981;
+        font-weight: 600;
+    }
+    
+    /* Enhanced Mobile responsiveness */
+    @media (max-width: 575px) {
+        .otp-container {
+            padding: 15px;
+        }
+        
+        .otp-card {
+            padding: 25px 20px;
+            margin: 10px;
+        }
+        
+        .otp-title {
+            font-size: 1.8rem;
+        }
+        
+        .otp-subtitle {
+            font-size: 1rem;
+        }
+        
+        .otp-icon {
+            font-size: 2.5rem;
+        }
+        
+        .otp-input {
+            font-size: 1rem;
+            letter-spacing: 0.2rem;
+            padding: 15px;
+        }
+        
+        .validate-btn {
+            font-size: 1rem;
+            padding: 15px 25px;
+        }
+        
+        .otp-timer {
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .resend-btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+        .otp-container {
+            padding: 20px;
+        }
+        
+        .otp-card {
+            padding: 35px 30px;
+        }
+        
+        .otp-title {
+            font-size: 2.2rem;
+        }
+        
+        .otp-icon {
+            font-size: 3rem;
+        }
+        
+        .otp-input {
+            font-size: 1.2rem;
+            letter-spacing: 0.3rem;
+            padding: 18px;
+        }
+        
+        .validate-btn {
+            font-size: 1.1rem;
+            padding: 16px 28px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .otp-container {
+            padding: 25px;
+        }
+        
+        .otp-card {
+            padding: 40px 35px;
+        }
+        
+        .otp-title {
+            font-size: 2.3rem;
+        }
+        
+        .otp-icon {
+            font-size: 3.5rem;
+        }
+        
+        .otp-input {
+            font-size: 1.3rem;
+            letter-spacing: 0.4rem;
+            padding: 20px;
+        }
+        
+        .validate-btn {
+            font-size: 1.15rem;
+            padding: 17px 30px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .otp-container {
+            padding: 30px;
+        }
+        
+        .otp-card {
+            padding: 50px;
+        }
+        
+        .otp-title {
+            font-size: 2.5rem;
+        }
+        
+        .otp-icon {
+            font-size: 4rem;
+        }
+        
+        .otp-input {
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            padding: 20px;
+        }
+        
+        .validate-btn {
+            font-size: 1.2rem;
+            padding: 18px 30px;
+        }
+    }
+</style>
+
+<div class="otp-container">
+    <div class="otp-card">
+        <div class="otp-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        
+        <h2 class="otp-title">OTP Verification</h2>
+        <p class="otp-subtitle">
+            We've sent a verification code to your registered email address.<br>
+            Please enter the 6-digit code below to continue.
+        </p>
+        
+        <!-- Timer Display -->
+        <div class="otp-timer">
+            <i class="fas fa-clock me-2"></i>
+            <span class="timer-text">Code expires in 5:00 minutes</span>
+        </div>
+        
+        <form method="post" class="otp-form">
+            {% csrf_token %}
+            
+            <!-- Display error messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% elif message.tags == 'success' %}
+                        <div class="success-message">
+                            <i class="fas fa-check-circle me-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="otp" class="form-label">
+                    <i class="fas fa-key me-2"></i>Enter Verification Code
+                </label>
+                <input 
+                    type="text" 
+                    name="otp" 
+                    id="otp" 
+                    class="otp-input" 
+                    placeholder="000000"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                    required
+                    autocomplete="one-time-code"
+                >
+            </div>
+            
+            <button type="submit" class="validate-btn">
+                <i class="fas fa-check me-2"></i>Verify OTP
+            </button>
+        </form>
+        
+        <div class="resend-section">
+            <p class="resend-text">Didn't receive the code?</p>
+            <a href="#" class="resend-btn" id="resendBtn">
+                <i class="fas fa-paper-plane me-2"></i>Resend OTP
+            </a>
+        </div>
+        
+        <div class="back-link">
+            <a href="{% url 'user_login' %}">
+                <i class="fas fa-arrow-left"></i>
+                Back to Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// OTP Input Enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const otpInput = document.getElementById('otp');
+    const resendBtn = document.getElementById('resendBtn');
+    let timeLeft = 300; // 5 minutes in seconds
+    let timerInterval;
+    
+    // Auto-format OTP input
+    otpInput.addEventListener('input', function(e) {
+        // Remove non-numeric characters
+        this.value = this.value.replace(/[^0-9]/g, '');
+        
+        // Limit to 6 digits
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6);
+        }
+        
+        // Auto-submit when 6 digits are entered
+        if (this.value.length === 6) {
+            setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        }
+    });
+    
+    // Focus on input when page loads
+    otpInput.focus();
+    
+    // Timer functionality
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timerText = document.querySelector('.timer-text');
+        
+        if (timerText) {
+            timerText.textContent = `Code expires in ${minutes}:${seconds.toString().padStart(2, '0')} minutes`;
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            if (timerText) {
+                timerText.textContent = 'Code has expired';
+                timerText.style.color = '#ef4444';
+            }
+            resendBtn.style.display = 'inline-block';
+        }
+        
+        timeLeft--;
+    }
+    
+    // Start timer
+    timerInterval = setInterval(updateTimer, 1000);
+    
+    // Resend OTP functionality
+    resendBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Disable button temporarily
+        this.style.opacity = '0.5';
+        this.style.pointerEvents = 'none';
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+        
+        // Simulate resend (you can implement actual resend logic here)
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Resend OTP';
+            this.style.opacity = '1';
+            this.style.pointerEvents = 'auto';
+            
+            // Reset timer
+            timeLeft = 300;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            // Show success message
+            const successMsg = document.createElement('div');
+            successMsg.className = 'success-message';
+            successMsg.innerHTML = '<i class="fas fa-check-circle me-2"></i>New OTP sent successfully!';
+            document.querySelector('.otp-form').insertBefore(successMsg, document.querySelector('.form-group'));
+            
+            setTimeout(() => {
+                successMsg.remove();
+            }, 3000);
+        }, 2000);
+    });
+    
+    // Prevent form submission if OTP is not 6 digits
+    document.querySelector('.otp-form').addEventListener('submit', function(e) {
+        if (otpInput.value.length !== 6) {
+            e.preventDefault();
+            otpInput.focus();
+            
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'error-message';
+            errorMsg.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Please enter a valid 6-digit OTP';
+            this.insertBefore(errorMsg, this.querySelector('.form-group'));
+            
+            setTimeout(() => {
+                errorMsg.remove();
+            }, 3000);
+        }
+    });
+});
+</script>
+{% endblock body %}

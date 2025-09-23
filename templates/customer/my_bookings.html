@@ -1,0 +1,704 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Bookings - BikeWala
+{% endblock title %}
+
+{% block body %}
+<style>
+    .bookings-container {
+        min-height: 100vh;
+        padding: 40px 20px;
+        background: var(--bg-primary);
+    }
+    
+    .bookings-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .bookings-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .bookings-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+    
+    .bookings-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-icon {
+        font-size: 2.5rem;
+        color: var(--accent-color);
+        margin-bottom: 15px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .bookings-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .bookings-grid {
+        display: grid;
+        gap: 25px;
+    }
+    
+    .booking-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .booking-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-400), var(--accent-color));
+        background-size: 200% 100%;
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    
+    .booking-id {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .booking-status {
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-pending {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: var(--white);
+    }
+    
+    .status-approved {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: var(--white);
+    }
+    
+    .status-rejected {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: var(--white);
+    }
+    
+    .status-cancelled {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        color: var(--white);
+    }
+    
+    .booking-content {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 25px;
+        align-items: center;
+    }
+    
+    .bike-image-container {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .bike-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .bike-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .booking-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .detail-item {
+        background: var(--bg-tertiary);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+    
+    .detail-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    
+    .detail-value {
+        font-size: 1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .bike-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+    }
+    
+    .bike-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+    
+    .booking-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .btn-action {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-view {
+        background: var(--accent-color);
+        color: var(--white);
+    }
+    
+    .btn-view:hover {
+        background: var(--secondary-400);
+        color: var(--white);
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .btn-cancel {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .btn-cancel:hover {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: var(--bg-secondary);
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+    }
+    
+    .empty-icon {
+        font-size: 5rem;
+        color: var(--text-muted);
+        margin-bottom: 30px;
+    }
+    
+    .empty-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 15px;
+    }
+    
+    .empty-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+    
+    .btn-explore {
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        color: var(--white);
+        padding: 15px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .btn-explore:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        color: var(--white);
+        text-decoration: none;
+    }
+    
+    /* Enhanced Mobile responsiveness */
+    @media (max-width: 575px) {
+        .bookings-container {
+            padding: 15px 10px;
+        }
+        
+        .bookings-title {
+            font-size: 1.8rem;
+        }
+        
+        .bookings-subtitle {
+            font-size: 1rem;
+        }
+        
+        .bookings-stats {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            padding: 20px;
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+        }
+        
+        .booking-content {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .booking-details {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .booking-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .bike-image-container {
+            max-width: 150px;
+            margin: 0 auto;
+        }
+        
+        .bike-image {
+            height: 100px;
+        }
+        
+        .booking-header {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .booking-card {
+            padding: 20px;
+        }
+        
+        .bike-name {
+            font-size: 1.1rem;
+        }
+        
+        .detail-item {
+            padding: 12px;
+        }
+        
+        .btn-action {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+        .bookings-container {
+            padding: 20px 15px;
+        }
+        
+        .bookings-title {
+            font-size: 2.2rem;
+        }
+        
+        .bookings-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .booking-content {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+        
+        .booking-details {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .booking-actions {
+            flex-direction: row;
+            gap: 15px;
+        }
+        
+        .bike-image-container {
+            max-width: 180px;
+            margin: 0 auto;
+        }
+        
+        .bike-image {
+            height: 120px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .bookings-container {
+            padding: 30px 20px;
+        }
+        
+        .bookings-title {
+            font-size: 2.5rem;
+        }
+        
+        .bookings-stats {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .booking-content {
+            grid-template-columns: 120px 1fr;
+            gap: 25px;
+        }
+        
+        .booking-details {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .bike-image-container {
+            max-width: 120px;
+        }
+        
+        .bike-image {
+            height: 120px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .bookings-container {
+            padding: 40px 20px;
+        }
+        
+        .bookings-title {
+            font-size: 3rem;
+        }
+        
+        .bookings-stats {
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+        
+        .booking-content {
+            grid-template-columns: 120px 1fr;
+            gap: 25px;
+        }
+        
+        .booking-details {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .bike-image-container {
+            max-width: 120px;
+        }
+        
+        .bike-image {
+            height: 120px;
+        }
+    }
+</style>
+
+<div class="bookings-container">
+    <div class="bookings-header">
+        <h1 class="bookings-title">My Bookings</h1>
+        <p class="bookings-subtitle">Track and manage your bike rentals</p>
+        
+        {% if bookings %}
+        <div class="bookings-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-number">{{ bookings|length }}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number">
+                    {% for booking in bookings %}
+                        {% if booking.status == 'Pending' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </div>
+                <div class="stat-label">Pending</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number">
+                    {% for booking in bookings %}
+                        {% if booking.status == 'Approve' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </div>
+                <div class="stat-label">Approved</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-number">
+                    {% for booking in bookings %}
+                        {% if booking.status == 'Reject' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </div>
+                <div class="stat-label">Rejected</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="stat-number">
+                    {% for booking in bookings %}
+                        {% if booking.status == 'Cancelled' %}{{ forloop.counter0|add:1 }}{% endif %}
+                    {% empty %}0{% endfor %}
+                </div>
+                <div class="stat-label">Cancelled</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="bookings-content">
+        {% if bookings %}
+            <div class="bookings-grid">
+                {% for booking in bookings %}
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <div class="booking-id">
+                            <i class="fas fa-hashtag me-2"></i>#{{ booking.booking_id }}
+                        </div>
+                        <div class="booking-status status-{{ booking.status|lower }}">
+                            {% if booking.status == 'Pending' %}
+                                <i class="fas fa-clock me-2"></i>Pending
+                            {% elif booking.status == 'Approve' %}
+                                <i class="fas fa-check me-2"></i>Approved
+                            {% elif booking.status == 'Reject' %}
+                                <i class="fas fa-times me-2"></i>Rejected
+                            {% elif booking.status == 'Cancelled' %}
+                                <i class="fas fa-ban me-2"></i>Cancelled
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="booking-content">
+                        <div class="bike-image-container">
+                            <img src="{{ booking.bike_name.photo.url }}" alt="{{ booking.bike_name.bike_name }}" class="bike-image">
+                        </div>
+                        
+                        <div class="booking-details">
+                            <div>
+                                <h3 class="bike-name">{{ booking.bike_name.bike_name }}</h3>
+                                <p class="bike-desc">{{ booking.bike_name.desc|truncatewords:15 }}</p>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Pickup Date</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-calendar me-2"></i>{{ booking.pickup_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Pickup Time</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-clock me-2"></i>{{ booking.pickup_time|time:"g:i A" }}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Drop Date</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-calendar me-2"></i>{{ booking.drop_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Drop Time</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-clock me-2"></i>{{ booking.drop_time|time:"g:i A" }}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-hourglass-half me-2"></i>
+                                    {% if booking.duration_days > 0 %}
+                                        {{ booking.duration_days }} day{{ booking.duration_days|pluralize }}
+                                    {% else %}
+                                        Same day
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Price per Day</div>
+                                <div class="detail-value">
+                                    <i class="fas fa-rupee-sign me-2"></i>₹{{ booking.bike_name.price_per_day }}
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Total Price</div>
+                                <div class="detail-value" style="color: var(--accent-color); font-weight: 700;">
+                                    <i class="fas fa-calculator me-2"></i>₹{{ booking.total_price }}
+                                </div>
+                            </div>
+                            
+                            {% if booking.status == 'Cancelled' and booking.cancellation_reason %}
+                            <div class="detail-item" style="grid-column: 1 / -1;">
+                                <div class="detail-label">Cancellation Reason</div>
+                                <div class="detail-value" style="font-style: italic; color: var(--text-muted);">
+                                    <i class="fas fa-comment me-2"></i>{{ booking.cancellation_reason|truncatewords:20 }}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <a href="{% url 'show' booking.bike_name.pk %}" class="btn-action btn-view">
+                            <i class="fas fa-eye"></i>View Bike
+                        </a>
+                        {% if booking.status == 'Pending' %}
+                        <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn-action btn-cancel">
+                            <i class="fas fa-times"></i>Cancel Booking
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <h2 class="empty-title">No Bookings Yet</h2>
+                <p class="empty-subtitle">You haven't made any bike bookings yet. Start exploring our amazing collection!</p>
+                <a href="{% url 'home' %}" class="btn-explore">
+                    <i class="fas fa-motorcycle me-2"></i>Explore Bikes
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock body %}

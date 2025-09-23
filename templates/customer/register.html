@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register
+{% endblock title %}
+
+{% block body %}
+<style>
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--bg-primary);
+    }
+    
+    .register-card {
+        background: var(--bg-secondary);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .register-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent-color), var(--secondary-400), var(--accent-color));
+        background-size: 200% 100%;
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .register-title {
+        text-align: center;
+        color: var(--text-primary);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .register-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+    
+    .form-label {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        background: var(--bg-tertiary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+    
+    .file-input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .file-input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 20px;
+        background: transparent;
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .file-input-label:hover {
+        background: var(--bg-tertiary);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+    }
+    
+    .file-input-label i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .register-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-400) 100%);
+        border: none;
+        border-radius: 12px;
+        color: var(--white);
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        margin-top: 20px;
+    }
+    
+    .register-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, var(--secondary-400) 0%, var(--accent-color) 100%);
+    }
+    
+    .register-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .login-link {
+        text-align: center;
+        margin-top: 25px;
+        color: var(--text-secondary);
+    }
+    
+    .login-link a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .login-link a:hover {
+        color: var(--secondary-400);
+        text-decoration: underline;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+    }
+    
+    .error-messages {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #ff6b6b;
+    }
+    
+    .error-messages ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+    
+    .error-messages li {
+        margin-bottom: 5px;
+    }
+    
+    /* Enhanced Mobile responsiveness */
+    @media (max-width: 575px) {
+        .register-container {
+            padding: 15px;
+        }
+        
+        .register-card {
+            padding: 25px 20px;
+            margin: 10px;
+        }
+        
+        .register-title {
+            font-size: 1.8rem;
+        }
+        
+        .register-subtitle {
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .register-btn {
+            padding: 12px;
+            font-size: 1rem;
+        }
+        
+        .file-input-label {
+            padding: 12px 15px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 767px) {
+        .register-container {
+            padding: 20px;
+        }
+        
+        .register-card {
+            padding: 35px 30px;
+        }
+        
+        .register-title {
+            font-size: 2.2rem;
+        }
+        
+        .form-row {
+            flex-direction: row;
+            gap: 15px;
+        }
+        
+        .form-control {
+            padding: 14px 18px;
+        }
+        
+        .register-btn {
+            padding: 14px;
+            font-size: 1.05rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .register-container {
+            padding: 25px;
+        }
+        
+        .register-card {
+            padding: 40px 35px;
+        }
+        
+        .register-title {
+            font-size: 2.3rem;
+        }
+        
+        .form-control {
+            padding: 15px 20px;
+        }
+        
+        .register-btn {
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .register-container {
+            padding: 30px;
+        }
+        
+        .register-card {
+            padding: 50px;
+        }
+        
+        .register-title {
+            font-size: 2.5rem;
+        }
+        
+        .form-control {
+            padding: 15px 20px;
+        }
+        
+        .register-btn {
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <h2 class="register-title">Create Account</h2>
+        <p class="register-subtitle">Join BikeWala and start your journey</p>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display form errors -->
+            {% if EUFO.errors or ECFO.errors %}
+                <div class="error-messages">
+                    {% if EUFO.errors %}
+                        <strong>User Form Errors:</strong>
+                        {{ EUFO.errors }}
+                    {% endif %}
+                    {% if ECFO.errors %}
+                        <strong>Profile Form Errors:</strong>
+                        {{ ECFO.errors }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <!-- Name fields in a row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="{{ EUFO.first_name.id_for_label }}">
+                        <i class="fas fa-user me-2"></i>First Name
+                    </label>
+                    {{ EUFO.first_name }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="{{ EUFO.last_name.id_for_label }}">
+                        <i class="fas fa-user me-2"></i>Last Name
+                    </label>
+                    {{ EUFO.last_name }}
+                </div>
+            </div>
+            
+            <!-- Email field -->
+            <div class="form-group">
+                <label class="form-label" for="{{ EUFO.email.id_for_label }}">
+                    <i class="fas fa-envelope me-2"></i>Email Address
+                </label>
+                {{ EUFO.email }}
+            </div>
+            
+            <!-- Username field -->
+            <div class="form-group">
+                <label class="form-label" for="{{ EUFO.username.id_for_label }}">
+                    <i class="fas fa-at me-2"></i>Username
+                </label>
+                {{ EUFO.username }}
+            </div>
+            
+            <!-- Password field -->
+            <div class="form-group">
+                <label class="form-label" for="{{ EUFO.password.id_for_label }}">
+                    <i class="fas fa-lock me-2"></i>Password
+                </label>
+                {{ EUFO.password }}
+            </div>
+            
+            <!-- Phone number field -->
+            <div class="form-group">
+                <label class="form-label" for="{{ ECFO.pno.id_for_label }}">
+                    <i class="fas fa-phone me-2"></i>Phone Number
+                </label>
+                {{ ECFO.pno }}
+            </div>
+            
+            <!-- Profile picture field -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-camera me-2"></i>Profile Picture
+                </label>
+                <div class="file-input-wrapper">
+                    {{ ECFO.profile_pic }}
+                    <label for="{{ ECFO.profile_pic.id_for_label }}" class="file-input-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Choose Profile Picture</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="register-btn">
+                <i class="fas fa-user-plus me-2"></i>Create Account
+            </button>
+        </form>
+        
+        <div class="login-link">
+            Already have an account? <a href="{% url 'user_login' %}">Sign In</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add form-control class to all form inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.classList.add('form-control');
+        if (input.type === 'file') {
+            input.classList.remove('form-control');
+        }
+    });
+    
+    // Handle file input display
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileLabel = document.querySelector('.file-input-label span');
+    
+    if (fileInput && fileLabel) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileLabel.textContent = this.files[0].name;
+            } else {
+                fileLabel.textContent = 'Choose Profile Picture';
+            }
+        });
+    }
+});
+</script>
+{% endblock body %}

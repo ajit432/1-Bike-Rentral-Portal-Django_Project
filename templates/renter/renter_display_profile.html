@@ -1,0 +1,279 @@
+{% extends "index.html" %}
+
+{% block title %}
+Profile
+{% endblock title %}
+
+{% block body %}
+
+<style>
+    /* Profile page container */
+    .profile-container {
+        min-height: 100vh;
+        background: #000000;
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Profile card */
+    .profile-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 50px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 500px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f093fb, #f5576c, #4facfe, #00f2fe);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Profile image */
+    .profile-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s ease;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Profile details */
+    .profile-details {
+        margin-bottom: 40px;
+    }
+
+    .profile-item {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .profile-item:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .profile-value {
+        font-size: 1.2rem;
+        color: #ffffff;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* Action buttons */
+    .profile-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-logout {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-logout::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-logout:hover::before {
+        left: 100%;
+    }
+
+    .btn-logout:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: linear-gradient(135deg, #2563eb, #1e3a8a);
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-edit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Floating elements animation */
+    .floating-element {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+
+    .floating-element:nth-child(3) {
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .profile-container {
+            padding: 20px 15px;
+        }
+        
+        .profile-card {
+            padding: 30px 25px;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .profile-actions {
+            flex-direction: column;
+        }
+        
+        .btn-logout, .btn-edit {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-card {
+            padding: 25px 20px;
+        }
+        
+        .profile-image {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .profile-value {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Floating decorative elements -->
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        
+        <img src="{{PO.profile_pic.url}}" alt="Profile Picture" class="profile-image">
+        
+        <div class="profile-details">
+            <div class="profile-item">
+                <span class="profile-label">Full Name</span>
+                <p class="profile-value">{{UO.first_name}} {{UO.last_name}}</p>
+            </div>
+            
+            <div class="profile-item">
+                <span class="profile-label">Phone Number</span>
+                <p class="profile-value">{{PO.pno}}</p>
+            </div>
+            
+            <div class="profile-item">
+                <span class="profile-label">Email Address</span>
+                <p class="profile-value">{{UO.email}}</p>
+            </div>
+        </div>
+        
+        <div class="profile-actions">
+            <a href="#" class="btn-edit">Edit Profile</a>
+            <a href="{% url 'renter_logout' %}" class="btn-logout">Logout</a>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
