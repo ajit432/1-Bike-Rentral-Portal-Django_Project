@@ -92,6 +92,92 @@
             --accent-hover: var(--secondary-700);
         }
 
+        /* Light theme modal styling */
+        [data-theme="light"] .logout-modal {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .logout-modal .modal-header {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .logout-modal .modal-title {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .logout-modal .btn-close {
+            filter: none;
+        }
+
+        [data-theme="light"] .logout-message {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .logout-submessage {
+            color: var(--text-secondary);
+        }
+
+        [data-theme="light"] .logout-modal .modal-footer {
+            border-top: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .logout-modal .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .logout-modal .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Bootstrap override for light theme */
+        [data-bs-theme="light"] body {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        [data-bs-theme="light"][data-theme="light"] body {
+            background: #ffffff !important;
+            color: #111827 !important;
+        }
+        
+        /* Force light theme colors */
+        html[data-bs-theme="light"] body {
+            background-color: #ffffff !important;
+            color: #111827 !important;
+        }
+        
+        /* Light theme offcanvas styling */
+        [data-theme="light"] .offcanvas {
+            background: var(--bg-primary);
+            border-left: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .offcanvas-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="light"] .offcanvas-title {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .list-group-item {
+            background: transparent;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .list-group-item a {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .list-group-item:hover {
+            background: var(--bg-secondary);
+        }
+
         /* Global styles */
         * {
             margin: 0;
@@ -101,9 +187,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-primary) !important;
             min-height: 100vh;
-            color: var(--text-primary);
+            color: var(--text-primary) !important;
             transition: all 0.3s ease;
             font-size: 16px;
             line-height: 1.6;
@@ -1240,10 +1326,12 @@
         // Theme Toggle Functionality
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
         const body = document.body;
 
         // Check for saved theme preference or default to 'dark'
         const currentTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-bs-theme', currentTheme);
         body.setAttribute('data-theme', currentTheme);
         
         // Update icon based on current theme
@@ -1257,6 +1345,8 @@
             const currentTheme = body.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
+            // Set both attributes for compatibility
+            htmlElement.setAttribute('data-bs-theme', newTheme);
             body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             
