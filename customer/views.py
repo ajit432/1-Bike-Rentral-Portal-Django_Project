@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.utils import timezone
 import random
 from renter.models import *
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 
@@ -42,7 +44,22 @@ def register(request):
             MCFDO.username = MUFDO
             MUFDO.save()
             MCFDO.save()
-            return HttpResponseRedirect(reverse('home'))
+            # ✅ Send confirmation email
+            subject = 'Welcome to Bike Rental System!'
+            message = f"""
+                Hello {MUFDO.first_name or MUFDO.username},
+                Thank you for registering with our Bike Rental System.
+                You can now log in and start booking bikes easily.
+                Happy riding! 🏍️
+                - Bike Rental Team
+                """
+            recipient = MUFDO.email
+            try:
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
+            except Exception as e:
+                print("line-60 Email sending failed:", e)
+
+            return HttpResponseRedirect(reverse('user_login'))
         return HttpResponse('Invalid Data')
     return render(request, 'customer/register.html', d)
 
@@ -84,7 +101,14 @@ def forgetpw(request):
             otp = random.randint(100000, 999999)
             request.session['otp'] = otp
             request.session['username'] = un
-            print(otp)
+            print(f"line-104 This is the otp for customoer forgot password {otp}")
+            send_mail(
+                'Your Password Reset OTP',
+                f'Your OTP for password reset is: {otp}',
+                settings.EMAIL_HOST_USER,
+                [UO.email],
+                fail_silently=False,
+            )
             return HttpResponseRedirect(reverse('otp'))
         except User.DoesNotExist:
             return HttpResponse('User not found')

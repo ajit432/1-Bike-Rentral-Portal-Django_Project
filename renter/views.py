@@ -110,7 +110,7 @@ def renter_otp(request):
         otp = request.POST.get('otp')
         gotp = request.session.get('otp')
         if int(otp) == gotp:
-            return HttpResponseRedirect(reverse('newpw'))
+            return HttpResponseRedirect(reverse('renter_newpw'))
         return HttpResponse('Invalid OTP')
     return render(request, 'renter/renter_otp.html')
 

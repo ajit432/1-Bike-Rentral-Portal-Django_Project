@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-26@8h7v&(39#04vawopap^8a0kw@!0ggp)71sbi*24w4b86jbq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,8 +133,8 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'deepankarmali2001@gmail.com'
-EMAIL_HOST_PASSWORD = 'ecfl jvtj tmra hcye'
+EMAIL_HOST_USER = 'ajitkumarbehera432@gmail.com'
+EMAIL_HOST_PASSWORD = 'jptc bdxg akbx eqla'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587
