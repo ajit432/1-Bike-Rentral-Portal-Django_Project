@@ -25,9 +25,9 @@ TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-26@8h7v&(39#04vawopap^8a0kw@!0ggp)71sbi*24w4b86jbq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  
 
-ALLOWED_HOSTS =  ['.onrender.com', 'localhost']  # add Render’s domain and localhost for testing
+ALLOWED_HOSTS =  ['.onrender.com' ]  # add Render’s domain and localhost for testing
 
 
 # Application definition
@@ -143,4 +143,4 @@ EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 
 SESSION_COOKIE_AGE = 2000
-SESSION_EXPIER_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE  = True
