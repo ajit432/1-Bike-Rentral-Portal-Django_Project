@@ -10,6 +10,8 @@ import random
 from renter.models import *
 from django.core.mail import send_mail
 from django.conf import settings
+from decimal import Decimal
+from django.utils import timezone
 
 # Create your views here.
 
@@ -224,6 +226,16 @@ def book(request, pk):
             MBFDO = BFDO.save(commit=False)
             MBFDO.username = UO
             MBFDO.bike_name=bike
+            # Calculate total price based on hourly rate
+            pickup_dt = datetime.combine(MBFDO.pickup_date, MBFDO.pickup_time)
+            drop_dt = datetime.combine(MBFDO.drop_date, MBFDO.drop_time)
+            duration_hours = (drop_dt - pickup_dt).total_seconds() / 3600
+            if duration_hours < 1:
+                duration_hours = 1
+
+            # Use hourly rate directly
+            MBFDO.total_price = Decimal(bike.price_per_hour) * Decimal(duration_hours)
+
             MBFDO.save()
             return render(request, 'customer/conf.html')
         return render(request, 'customer/book.html', d)
@@ -247,14 +259,16 @@ def my_bookings(request):
         UO = User.objects.get(username=un)
         bookings = Booking.objects.filter(username=UO)
         
-        # Calculate total price for each booking
+        # Calculate total price for each booking based on hourly rate
         for booking in bookings:
-            duration = (booking.drop_date - booking.pickup_date).days
-            if duration > 0:
-                booking.total_price = booking.bike_name.price_per_day * duration
-            else:
-                booking.total_price = booking.bike_name.price_per_day
-            booking.duration_days = duration
+            pickup_dt = datetime.combine(booking.pickup_date, booking.pickup_time)
+            drop_dt = datetime.combine(booking.drop_date, booking.drop_time)
+            duration_hours = (drop_dt - pickup_dt).total_seconds() / 3600
+            if duration_hours < 1:
+                duration_hours = 1
+            
+            booking.total_price = booking.bike_name.price_per_hour * duration_hours
+            booking.duration_hours = duration_hours
         
         d = {'bookings': bookings}
         return render(request, 'customer/my_bookings.html', d)

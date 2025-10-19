@@ -1129,7 +1129,7 @@ Book {{bike.bike_name}} - BikeWala
                 <!-- Rate Information -->
                 <div class="rate-info">
                     <p class="rate-text">Hourly Rate</p>
-                    <p class="rate-amount">₹500 per hour</p>
+                    <p class="rate-amount">₹{{bike.price_per_hour}} per hour</p>
                 </div>
             </div>
 
@@ -1197,7 +1197,7 @@ Book {{bike.bike_name}} - BikeWala
                             </div>
                             <div class="pricing-item">
                                 <div class="pricing-label">Rate</div>
-                                <div class="pricing-value">₹500/hour</div>
+                                <div class="pricing-value">₹{{bike.price_per_hour}}/hour</div>
                             </div>
                         </div>
                         
@@ -1232,7 +1232,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const durationElement = document.getElementById('duration');
     const totalPriceElement = document.getElementById('totalPrice');
     
-    const hourlyRate = 500; // ₹500 per hour
+    const hourlyRate = {{bike.price_per_hour}}; // Dynamic hourly rate from bike data
     
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];

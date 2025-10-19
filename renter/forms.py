@@ -19,3 +19,4 @@ class BikeForm(forms.ModelForm):
     class Meta:
         model = Bike
         fields = '__all__'
+        exclude = ['renter']

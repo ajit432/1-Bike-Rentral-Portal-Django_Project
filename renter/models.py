@@ -15,7 +15,8 @@ class Bike(models.Model):
     bike_name = models.CharField(max_length=50)
     desc = models.CharField(max_length=300)
     photo = models.ImageField(upload_to='bike_photos')
-    price_per_day = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Price per day in rupees")
+    price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Price per hour in rupees")
+    renter = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, help_text="Renter who owns this bike")
 
     def __str__(self):
         return self.bike_name
@@ -31,5 +32,6 @@ class Booking(models.Model):
     status = models.CharField(max_length=50, default='Pending')
     cancellation_reason = models.TextField(blank=True, null=True, help_text="Reason for cancellation")
     cancelled_at = models.DateTimeField(blank=True, null=True, help_text="When the booking was cancelled")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Total price of the booking")
 
 

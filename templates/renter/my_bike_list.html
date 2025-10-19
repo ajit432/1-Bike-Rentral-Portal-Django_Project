@@ -1,47 +1,12 @@
 {% extends "index.html" %}
 
 {% block title %}
-Home
+My Bike List
 {% endblock title %}
 
 {% block body %}
 
 <style>
-    /* Brand filter styling */
-    .brand-filter {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin: 30px 0;
-        padding: 0 20px;
-    }
-    
-    .brand-btn {
-        background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
-        border: none;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    }
-    
-    .brand-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-    
-    .brand-btn.active {
-        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-    }
-
-    /* Main title styling */
     .main-title {
         font-size: 3rem;
         font-weight: 700;
@@ -53,17 +18,15 @@ Home
         text-align: center;
     }
 
-    /* Bike cards container */
     .bikes-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 30px;
         padding: 20px;
         max-width: 1400px;
         margin: 0 auto;
     }
 
-    /* Individual bike card styling */
     .bike-card {
         background: linear-gradient(145deg, #2d3748, #4a5568);
         border-radius: 20px;
@@ -116,20 +79,37 @@ Home
         font-size: 1.5rem;
         font-weight: 700;
         color: #ffffff;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         line-height: 1.3;
+    }
+
+    .bike-company {
+        color: #60a5fa;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
     }
 
     .bike-description {
         color: #a0aec0;
         font-size: 0.95rem;
         line-height: 1.6;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         display: -webkit-box;
         -webkit-line-clamp: 3;
-        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+    }
+
+    .price-info {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 15px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1.1rem;
     }
 
     .card-actions {
@@ -138,8 +118,8 @@ Home
         flex-wrap: wrap;
     }
 
-    .btn-details {
-        background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+    .btn-edit {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         border: none;
         color: white;
         padding: 12px 24px;
@@ -152,14 +132,34 @@ Home
         min-width: 100px;
     }
 
-    .btn-details:hover {
+    .btn-edit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
         color: white;
         text-decoration: none;
     }
 
-    /* No bikes message */
+    .btn-delete {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        flex: 1;
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
     .no-bikes {
         text-align: center;
         padding: 60px 20px;
@@ -167,21 +167,30 @@ Home
         font-size: 1.2rem;
     }
 
-    /* Mobile responsiveness */
+    .back-btn {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin: 20px;
+        display: inline-block;
+    }
+
+    .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
     @media (max-width: 768px) {
         .main-title {
             font-size: 2.5rem;
             margin: 30px 0;
-        }
-        
-        .brand-filter {
-            gap: 8px;
-            margin: 20px 0;
-        }
-        
-        .brand-btn {
-            padding: 10px 20px;
-            font-size: 0.9rem;
         }
         
         .bikes-container {
@@ -206,53 +215,40 @@ Home
             flex-direction: column;
         }
         
-        .btn-details {
+        .btn-edit, .btn-delete {
             width: 100%;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .main-title {
-            font-size: 2rem;
-        }
-        
-        .bike-image {
-            height: 200px;
-        }
-        
-        .card-content {
-            padding: 15px;
         }
     }
 </style>
 
 <div class="container-fluid">
-    <h1 class="main-title">Your Bikes</h1>
+    <a href="{% url 'renter_home' %}" class="back-btn">← Back to Home</a>
     
-    <div class="brand-filter">
-        {% for brand in brands %}
-        <a href="{% url 'renter_display' brand.company %}" class="brand-btn">{{brand}}</a>
-        {% endfor %}
-    </div>
-
+    <h1 class="main-title">My Bike List</h1>
+    
     <div class="bikes-container">
-        {% if bikes %}
-        {% for bike in bikes %}
+        {% if my_bikes %}
+        {% for bike in my_bikes %}
         <div class="bike-card">
             <img src="{{bike.photo.url}}" class="bike-image" alt="{{bike.bike_name}}">
             <div class="card-content">
                 <h5 class="bike-title">{{bike.bike_name}}</h5>
+                <p class="bike-company">{{bike.company}}</p>
                 <p class="bike-description">{{bike.desc}}</p>
+                <div class="price-info">
+                    ₹{{bike.price_per_hour}} / hour
+                </div>
                 <div class="card-actions">
-                    <a href="{% url 'bike_details' bike.id %}" class="btn-details">Details</a>
+                    <a href="{% url 'edit_bike' bike.id %}" class="btn-edit">Edit</a>
+                    <a href="{% url 'delete_bike' bike.id %}" class="btn-delete">Delete</a>
                 </div>
             </div>
         </div>
         {% endfor %}
         {% else %}
         <div class="no-bikes">
-            <h2>Sorry, No {{brand}} bikes are available at the moment</h2>
-            <p>Please add some bikes to get started.</p>
+            <h2>No bikes found</h2>
+            <p>You haven't added any bikes yet. <a href="{% url 'add_bikes' %}" style="color: #60a5fa;">Add your first bike</a></p>
         </div>
         {% endif %}
     </div>

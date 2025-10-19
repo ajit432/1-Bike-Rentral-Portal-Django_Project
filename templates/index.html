@@ -776,6 +776,13 @@
             }
         }
 
+        /* Hide top hamburger menu on mobile */
+        @media (max-width: 768px) {
+            .navbar-toggler {
+                display: none !important;
+            }
+        }
+
         /* Enhanced Floating action button for mobile */
         .fab {
             position: fixed;
@@ -918,6 +925,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_bike_list' %}">
+                            <i class="fas fa-list me-1"></i>My Bikes
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                             <i class="fas fa-sign-out-alt me-1"></i>Logout
                         </a>
@@ -1001,6 +1013,11 @@
                 <li class="list-group-item">
                     <a href="{% url 'add_bikes' %}" class="text-decoration-none">
                         <i class="fas fa-plus-circle me-2"></i>Add Bikes
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'my_bike_list' %}" class="text-decoration-none">
+                        <i class="fas fa-list me-2"></i>My Bikes
                     </a>
                 </li>
                 <li class="list-group-item">

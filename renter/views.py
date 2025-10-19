@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 import random
 from renter.forms import *
+from datetime import datetime
+from decimal import Decimal
 
 # Create your views here.
 
@@ -142,14 +144,19 @@ def renter_changepw(request):
 def allbooking(request):
     allbookings = Booking.objects.all()
     
-    # Calculate total price for each booking
+    # Calculate total price for each booking based on hourly rate
     for booking in allbookings:
-        duration = (booking.drop_date - booking.pickup_date).days
-        if duration > 0:
-            booking.total_price = booking.bike_name.price_per_day * duration
-        else:
-            booking.total_price = booking.bike_name.price_per_day
-        booking.duration_days = duration
+        pickup_dt = datetime.combine(booking.pickup_date, booking.pickup_time)
+        drop_dt = datetime.combine(booking.drop_date, booking.drop_time)
+        # Use Decimal for precise monetary calculations and to avoid Decimal * float
+        seconds = Decimal((drop_dt - pickup_dt).total_seconds())
+        duration_hours = seconds / Decimal(3600)
+        if duration_hours < Decimal('1'):
+            duration_hours = Decimal('1')
+
+        # Calculate and round to 2 decimal places for currency
+        booking.total_price = (booking.bike_name.price_per_hour * duration_hours).quantize(Decimal('0.01'))
+        booking.duration_hours = float(duration_hours)
     
     d = {'allbookings':allbookings}
     return render(request, 'renter/allbooking.html', d)
@@ -170,12 +177,18 @@ def reject(request, pk):
     
 
 def add_bikes(request):
+    un = request.session.get('username')
+    if not un:
+        return HttpResponse('Please login first')
+    
     EBFO = BikeForm()
     d = {'EBFO': EBFO}
     if request.method == 'POST' and request.FILES:
         BFDO = BikeForm(request.POST, request.FILES)
         if BFDO.is_valid():
-            BFDO.save()
+            bike = BFDO.save(commit=False)
+            bike.renter = User.objects.get(username=un)
+            bike.save()
             return HttpResponseRedirect(reverse('renter_home'))
     return render(request, 'renter/add_bikes.html', d)
 
@@ -183,3 +196,110 @@ def renter_display(request, brand):
     bikes = Bike.objects.filter(company=brand)
     d = {'bikes': bikes, 'brand': brand}
     return render(request, 'renter/renter_home.html', d)
+
+def my_bike_list(request):
+    un = request.session.get('username')
+    if not un:
+        return HttpResponse('Please login first')
+    
+    UO = User.objects.get(username=un)
+    my_bikes = Bike.objects.filter(renter=UO)
+    d = {'my_bikes': my_bikes, 'UO': UO}
+    return render(request, 'renter/my_bike_list.html', d)
+
+def edit_bike(request, bike_id):
+    un = request.session.get('username')
+    if not un:
+        return HttpResponse('Please login first')
+    
+    try:
+        bike = Bike.objects.get(id=bike_id, renter__username=un)
+    except Bike.DoesNotExist:
+        return HttpResponse('Bike not found or you do not have permission to edit this bike')
+    
+    if request.method == 'POST':
+        # Update bike information
+        bike.bike_name = request.POST.get('bike_name', bike.bike_name)
+        bike.desc = request.POST.get('desc', bike.desc)
+        bike.price_per_hour = request.POST.get('price_per_hour', bike.price_per_hour)
+        
+        # Handle brand update
+        brand_name = request.POST.get('company')
+        if brand_name:
+            try:
+                brand = Brand.objects.get(company=brand_name)
+                bike.company = brand
+            except Brand.DoesNotExist:
+                # Create new brand if it doesn't exist
+                brand = Brand.objects.create(company=brand_name)
+                bike.company = brand
+        
+        # Handle photo update
+        if 'photo' in request.FILES:
+            bike.photo = request.FILES['photo']
+        
+        bike.save()
+        return HttpResponseRedirect(reverse('my_bike_list'))
+    
+    # Get all brands for the dropdown
+    brands = Brand.objects.all()
+    d = {'bike': bike, 'brands': brands}
+    return render(request, 'renter/edit_bike.html', d)
+
+def delete_bike(request, bike_id):
+    un = request.session.get('username')
+    if not un:
+        return HttpResponse('Please login first')
+    
+    try:
+        bike = Bike.objects.get(id=bike_id, renter__username=un)
+    except Bike.DoesNotExist:
+        return HttpResponse('Bike not found or you do not have permission to delete this bike')
+    
+    if request.method == 'POST':
+        bike.delete()
+        return HttpResponseRedirect(reverse('my_bike_list'))
+    
+    d = {'bike': bike}
+    return render(request, 'renter/delete_bike.html', d)
+
+def bike_details(request, bike_id):
+    try:
+        bike = Bike.objects.get(id=bike_id)
+        d = {'bike': bike}
+        return render(request, 'renter/bike_details.html', d)
+    except Bike.DoesNotExist:
+        return HttpResponse('Bike not found')
+
+def renter_edit_profile(request):
+    un = request.session.get('username')
+    if not un:
+        return HttpResponse('Please login first')
+    
+    try:
+        UO = User.objects.get(username=un)
+        PO = Profile.objects.get(username=UO)
+        
+        if request.method == 'POST':
+            # Update User model
+            UO.first_name = request.POST.get('first_name', UO.first_name)
+            UO.last_name = request.POST.get('last_name', UO.last_name)
+            UO.email = request.POST.get('email', UO.email)
+            UO.save()
+            
+            # Update Profile model
+            PO.pno = request.POST.get('pno', PO.pno)
+            if 'profile_pic' in request.FILES:
+                PO.profile_pic = request.FILES['profile_pic']
+            PO.save()
+            
+            return HttpResponseRedirect(reverse('renter_display_profile'))
+        
+        # Pre-populate forms with current data
+        EUFO = UserForm(instance=UO)
+        ECFO = ProfileForm(instance=PO)
+        d = {'EUFO': EUFO, 'ECFO': ECFO, 'UO': UO, 'PO': PO}
+        return render(request, 'renter/renter_edit_profile.html', d)
+        
+    except (User.DoesNotExist, Profile.DoesNotExist):
+        return HttpResponse('Profile not found')
