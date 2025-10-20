@@ -25,11 +25,11 @@ TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-26@8h7v&(39#04vawopap^8a0kw@!0ggp)71sbi*24w4b86jbq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False  #Production time false deployment
-DEBUG = True  #Local time True
+DEBUG = False  #Production time false deployment
+# DEBUG = True  #Local time True
 
-ALLOWED_HOSTS =  ['.onrender.com' , '127.0.0.1']  # add Render’s domain for deployment & Production
-# ALLOWED_HOSTS =  ['.onrender.com']  # add Render’s domain and localhost for testing
+# ALLOWED_HOSTS =  ['.onrender.com' , '127.0.0.1']  # add Render’s domain for deployment & Production
+ALLOWED_HOSTS =  ['.onrender.com']  # add Render’s domain and localhost for testing
 
 
 # Application definition
