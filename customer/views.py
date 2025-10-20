@@ -10,8 +10,9 @@ import random
 from renter.models import *
 from django.core.mail import send_mail
 from django.conf import settings
-from decimal import Decimal
+from decimal import Decimal , ROUND_HALF_UP
 from django.utils import timezone
+import datetime
 
 # Create your views here.
 
@@ -153,6 +154,7 @@ def changepw(request):
         otp = random.randint(100000, 999999)
         request.session['otp'] = otp
         request.session['username'] = un
+        print("line no 157 change password otp -------- ")
         print(otp)
         return HttpResponseRedirect(reverse('otp'))
     except User.DoesNotExist:
@@ -227,8 +229,8 @@ def book(request, pk):
             MBFDO.username = UO
             MBFDO.bike_name=bike
             # Calculate total price based on hourly rate
-            pickup_dt = datetime.combine(MBFDO.pickup_date, MBFDO.pickup_time)
-            drop_dt = datetime.combine(MBFDO.drop_date, MBFDO.drop_time)
+            pickup_dt = datetime.datetime.combine(MBFDO.pickup_date, MBFDO.pickup_time)
+            drop_dt = datetime.datetime.combine(MBFDO.drop_date, MBFDO.drop_time)
             duration_hours = (drop_dt - pickup_dt).total_seconds() / 3600
             if duration_hours < 1:
                 duration_hours = 1
@@ -261,13 +263,15 @@ def my_bookings(request):
         
         # Calculate total price for each booking based on hourly rate
         for booking in bookings:
-            pickup_dt = datetime.combine(booking.pickup_date, booking.pickup_time)
-            drop_dt = datetime.combine(booking.drop_date, booking.drop_time)
-            duration_hours = (drop_dt - pickup_dt).total_seconds() / 3600
+            pickup_dt = datetime.datetime.combine(booking.pickup_date, booking.pickup_time)
+            drop_dt = datetime.datetime.combine(booking.drop_date, booking.drop_time)
+            duration_seconds = Decimal((drop_dt - pickup_dt).total_seconds())
+            duration_hours = duration_seconds / Decimal('3600')
             if duration_hours < 1:
-                duration_hours = 1
+                duration_hours = Decimal('1')
             
-            booking.total_price = booking.bike_name.price_per_hour * duration_hours
+            total_price = booking.bike_name.price_per_hour * duration_hours
+            booking.total_price = total_price.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
             booking.duration_hours = duration_hours
         
         d = {'bookings': bookings}
