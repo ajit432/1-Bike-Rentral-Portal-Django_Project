@@ -34,9 +34,9 @@ urlpatterns = [
 
 # This is the crucial part for serving media files in production (with DEBUG=False)
 # Add this line at the end of the file.
-if settings.DEBUG is False: #if not settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG is False: #if not settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# else:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # If you want it to also work in development, you can use this instead:
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
