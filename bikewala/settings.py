@@ -28,8 +28,8 @@ SECRET_KEY = 'django-insecure-26@8h7v&(39#04vawopap^8a0kw@!0ggp)71sbi*24w4b86jbq
 DEBUG = False  #Production time false deployment
 # DEBUG = True  #Local time True
 
-# ALLOWED_HOSTS =  ['.onrender.com' , '127.0.0.1']  # add Render’s domain for deployment & Production
-ALLOWED_HOSTS =  ['.onrender.com']  # add Render’s domain and localhost for testing
+# ALLOWED_HOSTS =  ['.onrender.com' , '127.0.0.1']  # add Render’s domain for testing
+ALLOWED_HOSTS =  ['.onrender.com']  # add Render’s domain and localhost for deployment & Production
 
 
 # Application definition
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # <-- ADD THIS For  Deployment
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,9 +122,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# This is the URL that will be used to refer to static files in your templates
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # This is the directory where `collectstatic` will gather all static files for deployment.
+# This tells Django to use WhiteNoise to serve files and handle caching/compression.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Optional: If you have a 'static' folder in your root directory for project-wide assets
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+     os.path.join(BASE_DIR, 'media'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -133,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-
+# The URL prefix for media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
